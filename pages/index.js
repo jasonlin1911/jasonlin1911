@@ -1,7 +1,9 @@
 import Auth from '../components/Auth'
-import { supabase } from '../lib/supabase'
+import { createClient } from '../lib/supabase'
 
 export default function Home({ user }) {
+  const supabase = createClient()
+  
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) alert(error.message)

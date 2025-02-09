@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { createClient } from '../lib/supabase'
 
 export default function Auth() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [authMode, setAuthMode] = useState('signin') // 'signin' or 'signup'
+  const [authMode, setAuthMode] = useState('signin')
+  const supabase = createClient()
 
   const handleAuth = async (e) => {
     e.preventDefault()

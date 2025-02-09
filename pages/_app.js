@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { createClient } from '../lib/supabase'
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null)
+  const supabase = createClient()
 
   useEffect(() => {
-    // 檢查當前的認證狀態
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
-    })
+    }
+    getUser()
 
-    // 設置認證狀態的監聽器
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
@@ -19,7 +20,7 @@ function MyApp({ Component, pageProps }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  return <Component {...pageProps} user={user} />
+  return <Component {...pageProps} user={user} supabase={supabase} />
 }
 
 export default MyApp
